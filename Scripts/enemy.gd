@@ -13,6 +13,8 @@ extends CharacterBody2D
 var last_shoot_time : float
 @export var shoot_range : float
 
+@export var flip_sprite : bool = false
+
 @onready var avoidance_ray : RayCast2D = $AvoidanceRay
 @onready var player = get_tree().get_first_node_in_group("Player")
 @onready var sprite : Sprite2D = $Sprite
@@ -35,7 +37,10 @@ func _process(delta):
     player_dist = global_position.distance_to(player.global_position)
     player_dir = global_position.direction_to(player.global_position)
 
-    sprite.flip_h = player_dir.x < 0
+    if flip_sprite:
+        sprite.flip_h = player_dir.x > 0
+    else:
+        sprite.flip_h = player_dir.x < 0
 
     if player_dist < shoot_range:
         if Time.get_unix_time_from_system() - last_shoot_time > shoot_rate:

@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://berakqga2qmw2"]
+
+[ext_resource type="PackedScene" uid="uid://cmstwv6h504if" path="res://Scenes/enemy.tscn" id="1_54mmy"]
+[ext_resource type="PackedScene" uid="uid://baeycap25e7g3" path="res://Scenes/boss_bullet.tscn" id="2_hu4bx"]
+
+[node name="Enemy" instance=ExtResource("1_54mmy")]
+current_hp = 20
+max_hp = 20
+max_speed = 30.0
+shoot_rate = 0.1
+
+[node name="Sprite" parent="." index="0"]
+region_rect = Rect2(1445, 32, 22, 28)
+
+[node name="CollisionShape2D" parent="." index="1"]
+position = Vector2(0, 2)
+
+[node name="EnemyBulletPool" parent="." index="3"]
+node_scene = ExtResource("2_hu4bx")

@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cvxvlir0hic7u" path="res://Scenes/enemy_bullet.tscn" id="4_0830c"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8gbba"]
+radius = 7.3333335
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_287tu"]
 bg_color = Color(0.13050893, 0.13896614, 0.015133788, 1)
@@ -14,6 +15,7 @@ bg_color = Color(0.13050893, 0.13896614, 0.015133788, 1)
 bg_color = Color(1, 0, 0, 1)
 
 [node name="Enemy" type="CharacterBody2D" groups=["Enemy"]]
+collision_mask = 6
 script = ExtResource("1_1f0kj")
 max_speed = 50.0
 acceleration = 10.0
@@ -41,6 +43,7 @@ script = ExtResource("3_287tu")
 node_scene = ExtResource("4_0830c")
 
 [node name="AvoidanceRay" type="RayCast2D" parent="."]
+collision_mask = 5
 
 [node name="HealthBar" type="ProgressBar" parent="."]
 offset_left = -15.0

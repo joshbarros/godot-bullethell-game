@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=4 uid="uid://hjw5pmy1nr13"]
+[gd_scene load_steps=9 format=4 uid="uid://hjw5pmy1nr13"]
 
 [ext_resource type="TileSet" uid="uid://b1a0nv6k5pn7y" path="res://Tiles/main_tileset.tres" id="1_21xkr"]
 [ext_resource type="PackedScene" uid="uid://6q6nkxm1j0fd" path="res://Scenes/player.tscn" id="2_bo1nx"]
@@ -6,6 +6,10 @@
 [ext_resource type="Script" uid="uid://c6hagnia5vs7x" path="res://Scripts/camera_controller.gd" id="3_8gbba"]
 [ext_resource type="PackedScene" uid="uid://cmstwv6h504if" path="res://Scenes/enemy.tscn" id="4_jjvhh"]
 [ext_resource type="Script" uid="uid://dow8gx1grdmpf" path="res://Scripts/enemy_spawner.gd" id="5_21xkr"]
+[ext_resource type="PackedScene" uid="uid://berakqga2qmw2" path="res://Scenes/boss_enemy.tscn" id="7_6bp64"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6bp64"]
+size = Vector2(95, 127)
 
 [node name="Main" type="Node2D"]
 
@@ -26,12 +30,10 @@ limit_bottom = 600
 editor_draw_limits = true
 script = ExtResource("3_8gbba")
 
-[node name="Enemy" parent="." instance=ExtResource("4_jjvhh")]
-position = Vector2(200, 280)
-
-[node name="EnemySpawner" type="Node" parent="." node_paths=PackedStringArray("enemy_pool", "spawn_points")]
+[node name="EnemySpawner" type="Node" parent="." node_paths=PackedStringArray("enemy_pools", "spawn_points")]
 script = ExtResource("5_21xkr")
-enemy_pool = NodePath("EnemyPool")
+enemy_pools = [NodePath("EnemyPool"), NodePath("BossPool")]
+enemy_spawn_weights = Array[int]([10, 1])
 spawn_points = [NodePath("EnemySpawnPoint"), NodePath("EnemySpawnPoint2"), NodePath("EnemySpawnPoint3")]
 
 [node name="SpawnTimer" type="Timer" parent="EnemySpawner"]
@@ -42,6 +44,10 @@ one_shot = true
 script = ExtResource("3_6t5aa")
 node_scene = ExtResource("4_jjvhh")
 
+[node name="BossPool" type="Node2D" parent="EnemySpawner"]
+script = ExtResource("3_6t5aa")
+node_scene = ExtResource("7_6bp64")
+
 [node name="EnemySpawnPoint" type="Node2D" parent="EnemySpawner"]
 position = Vector2(210, 141)
 
@@ -50,3 +56,14 @@ position = Vector2(454, 143)
 
 [node name="EnemySpawnPoint3" type="Node2D" parent="EnemySpawner"]
 position = Vector2(456, 238)
+
+[node name="Enemy" parent="." instance=ExtResource("7_6bp64")]
+position = Vector2(182, 378)
+collision_mask = 1
+
+[node name="CenterObstacle" type="StaticBody2D" parent="."]
+collision_layer = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CenterObstacle"]
+position = Vector2(336.5, 287.5)
+shape = SubResource("RectangleShape2D_6bp64")
