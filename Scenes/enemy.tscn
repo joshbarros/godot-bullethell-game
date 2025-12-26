@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://cmstwv6h504if"]
+[gd_scene load_steps=8 format=3 uid="uid://cmstwv6h504if"]
 
 [ext_resource type="Script" uid="uid://bp0mlcisq382n" path="res://Scripts/enemy.gd" id="1_1f0kj"]
 [ext_resource type="Texture2D" uid="uid://cec0l18u2h6ml" path="res://Sprites/Spritesheet.png" id="1_hghv2"]
@@ -6,6 +6,12 @@
 [ext_resource type="PackedScene" uid="uid://cvxvlir0hic7u" path="res://Scenes/enemy_bullet.tscn" id="4_0830c"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_8gbba"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_287tu"]
+bg_color = Color(0.13050893, 0.13896614, 0.015133788, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0830c"]
+bg_color = Color(1, 0, 0, 1)
 
 [node name="Enemy" type="CharacterBody2D" groups=["Enemy"]]
 script = ExtResource("1_1f0kj")
@@ -35,3 +41,14 @@ script = ExtResource("3_287tu")
 node_scene = ExtResource("4_0830c")
 
 [node name="AvoidanceRay" type="RayCast2D" parent="."]
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -15.0
+offset_top = -22.0
+offset_right = 15.0
+offset_bottom = -18.0
+theme_override_styles/background = SubResource("StyleBoxFlat_287tu")
+theme_override_styles/fill = SubResource("StyleBoxFlat_0830c")
+max_value = 50.0
+value = 25.0
+show_percentage = false

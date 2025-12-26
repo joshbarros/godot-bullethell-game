@@ -12,6 +12,7 @@ var spawn_rate : float
 @onready var spawn_timer : Timer = $SpawnTimer
 
 func _ready():
+    spawn_timer.timeout.connect(_on_spawn_timer_timeout)
     _on_spawn_timer_timeout()
 
 func _process(delta):

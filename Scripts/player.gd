@@ -13,8 +13,13 @@ var last_shoot_time : float = 0.0
 @onready var sprite : Sprite2D = $Sprite
 @onready var muzzle = $Muzzle
 @onready var bullet_pool = $PlayerBulletPool
+@onready var health_bar : ProgressBar = $HealthBar
 
 var move_input : Vector2
+
+func _ready():
+	health_bar.max_value = max_hp
+	health_bar.value = current_hp
 
 var bullet_scene : PackedScene = preload("res://Scenes/bullet.tscn")
 
@@ -35,6 +40,18 @@ func _process(_delta):
 		if Time.get_unix_time_from_system() - last_shoot_time > shoot_rate:
 			_shoot()
 
+	_move_wobble()
+
+func _move_wobble():
+	if move_input.length() == 0:
+		sprite.rotation_degrees = 0
+		return
+	
+	var t = Time.get_unix_time_from_system()
+	var rot = sin(t * 20) * 2
+	
+	sprite.rotation_degrees = rot
+
 func _shoot():
 	last_shoot_time = Time.get_unix_time_from_system()
 
@@ -51,3 +68,11 @@ func take_damage(damage : int):
 
 	if current_hp <= 0:
 		print("Player Died")
+	else:
+		_damage_flash()
+		health_bar.value = current_hp
+
+func _damage_flash():
+	sprite.modulate = Color.RED
+	await get_tree().create_timer(0.1).timeout
+	sprite.modulate = Color.WHITE
