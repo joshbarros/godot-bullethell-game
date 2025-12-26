@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=4 uid="uid://hjw5pmy1nr13"]
+[gd_scene load_steps=13 format=4 uid="uid://hjw5pmy1nr13"]
 
 [ext_resource type="TileSet" uid="uid://b1a0nv6k5pn7y" path="res://Tiles/main_tileset.tres" id="1_21xkr"]
 [ext_resource type="PackedScene" uid="uid://6q6nkxm1j0fd" path="res://Scenes/player.tscn" id="2_bo1nx"]
@@ -10,6 +10,18 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6bp64"]
 size = Vector2(95, 127)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bottom"]
+size = Vector2(800, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_top"]
+size = Vector2(800, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_right"]
+size = Vector2(20, 608)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_left"]
+size = Vector2(20, 608)
 
 [node name="Main" type="Node2D"]
 
@@ -26,7 +38,7 @@ zoom = Vector2(2, 2)
 limit_left = 0
 limit_top = 0
 limit_right = 800
-limit_bottom = 600
+limit_bottom = 608
 editor_draw_limits = true
 script = ExtResource("3_8gbba")
 
@@ -67,3 +79,22 @@ collision_layer = 4
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CenterObstacle"]
 position = Vector2(336.5, 287.5)
 shape = SubResource("RectangleShape2D_6bp64")
+
+[node name="OuterBoundary" type="StaticBody2D" parent="."]
+collision_layer = 4
+
+[node name="Bottom" type="CollisionShape2D" parent="OuterBoundary"]
+position = Vector2(400, 618)
+shape = SubResource("RectangleShape2D_bottom")
+
+[node name="Top" type="CollisionShape2D" parent="OuterBoundary"]
+position = Vector2(400, -10)
+shape = SubResource("RectangleShape2D_top")
+
+[node name="Right" type="CollisionShape2D" parent="OuterBoundary"]
+position = Vector2(810, 304)
+shape = SubResource("RectangleShape2D_right")
+
+[node name="Left" type="CollisionShape2D" parent="OuterBoundary"]
+position = Vector2(-10, 304)
+shape = SubResource("RectangleShape2D_left")
