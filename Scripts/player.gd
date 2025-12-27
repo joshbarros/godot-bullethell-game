@@ -81,6 +81,7 @@ func take_damage(damage : int):
 	else:
 		_damage_flash()
 		health_bar.value = current_hp
+		$"../Camera2D".damage_shake()
 
 func _damage_flash():
 	sprite.modulate = Color.RED
