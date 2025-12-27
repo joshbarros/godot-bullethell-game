@@ -16,6 +16,7 @@ var last_shoot_time : float = 0.0
 @onready var health_bar : ProgressBar = $HealthBar
 
 var move_input : Vector2
+var additional_bullet_speed : float
 
 func _ready():
 	health_bar.max_value = max_hp
@@ -62,6 +63,7 @@ func _shoot():
 	# Set bullet direction towards mouse
 	var direction = (get_global_mouse_position() - muzzle.global_position).normalized()
 	bullet.move_dir = direction
+	bullet.additional_speed = additional_bullet_speed
 
 func take_damage(damage : int):
 	current_hp -= damage
@@ -76,3 +78,10 @@ func _damage_flash():
 	sprite.modulate = Color.RED
 	await get_tree().create_timer(0.1).timeout
 	sprite.modulate = Color.WHITE
+
+func heal(amount : int):
+	current_hp += amount
+	if current_hp > max_hp:
+		current_hp = max_hp
+	
+	health_bar.value = current_hp

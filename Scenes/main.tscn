@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://hjw5pmy1nr13"]
+[gd_scene load_steps=17 format=4 uid="uid://hjw5pmy1nr13"]
 
 [ext_resource type="TileSet" uid="uid://b1a0nv6k5pn7y" path="res://Tiles/main_tileset.tres" id="1_21xkr"]
 [ext_resource type="PackedScene" uid="uid://6q6nkxm1j0fd" path="res://Scenes/player.tscn" id="2_bo1nx"]
@@ -7,6 +7,10 @@
 [ext_resource type="PackedScene" uid="uid://cmstwv6h504if" path="res://Scenes/enemy.tscn" id="4_jjvhh"]
 [ext_resource type="Script" uid="uid://dow8gx1grdmpf" path="res://Scripts/enemy_spawner.gd" id="5_21xkr"]
 [ext_resource type="PackedScene" uid="uid://berakqga2qmw2" path="res://Scenes/boss_enemy.tscn" id="7_6bp64"]
+[ext_resource type="Script" uid="uid://6u4kf52syufo" path="res://Scripts/potion_spawner.gd" id="8_344ge"]
+[ext_resource type="PackedScene" uid="uid://rbx0f35blpl0" path="res://Scenes/health_potion.tscn" id="9_d1ilt"]
+[ext_resource type="PackedScene" uid="uid://ca5sm2e8k8tr6" path="res://Scenes/shoot_speed_potion.tscn" id="9_ynf5e"]
+[ext_resource type="PackedScene" uid="uid://dbyol757yf5y3" path="res://Scenes/move_speed_potion.tscn" id="10_hptm8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6bp64"]
 size = Vector2(95, 127)
@@ -69,10 +73,6 @@ position = Vector2(454, 143)
 [node name="EnemySpawnPoint3" type="Node2D" parent="EnemySpawner"]
 position = Vector2(456, 238)
 
-[node name="Enemy" parent="." instance=ExtResource("7_6bp64")]
-position = Vector2(182, 378)
-collision_mask = 1
-
 [node name="CenterObstacle" type="StaticBody2D" parent="."]
 collision_layer = 4
 
@@ -98,3 +98,17 @@ shape = SubResource("RectangleShape2D_right")
 [node name="Left" type="CollisionShape2D" parent="OuterBoundary"]
 position = Vector2(-10, 304)
 shape = SubResource("RectangleShape2D_left")
+
+[node name="PotionSpawner" type="Node" parent="."]
+script = ExtResource("8_344ge")
+potion_scenes = Array[PackedScene]([ExtResource("9_d1ilt"), ExtResource("9_ynf5e"), ExtResource("10_hptm8")])
+min_bounds = Vector2(-400, -400)
+max_bounds = Vector2(400, 400)
+
+[node name="SpawnTimer" type="Timer" parent="PotionSpawner"]
+wait_time = 2.0
+autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[connection signal="timeout" from="PotionSpawner/SpawnTimer" to="PotionSpawner" method="_on_spawn_timer_timeout"]

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://rbx0f35blpl0"]
+
+[ext_resource type="PackedScene" uid="uid://bpaoa2s1dfsbx" path="res://Scenes/potion.tscn" id="1_00e4y"]
+
+[node name="Potion" instance=ExtResource("1_00e4y")]
+value = 20.0
