@@ -22,6 +22,8 @@ var last_shoot_time : float
 @onready var muzzle = $Muzzle
 @onready var health_bar : ProgressBar = $HealthBar
 
+var damaged_audio : AudioStreamPlayer
+
 var player_dist : float
 var player_dir : Vector2
 
@@ -29,6 +31,9 @@ func _ready():
 	health_bar.max_value = max_hp
 	health_bar.value = current_hp
 	visibility_changed.connect(_on_visibility_changed)
+	
+	# Get the DamagedAudio from Main scene
+	damaged_audio = get_tree().root.get_node("Main/DamagedAudio")
 
 func _process(delta):
 	if not visible:
@@ -113,6 +118,8 @@ func take_damage(damage : int):
 		visible = false
 	else:
 		_damage_flash()
+		if damaged_audio:
+			damaged_audio.play()
 		health_bar.value = current_hp
 
 func _damage_flash():

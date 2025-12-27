@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://hjw5pmy1nr13"]
+[gd_scene load_steps=25 format=4 uid="uid://hjw5pmy1nr13"]
 
 [ext_resource type="Script" uid="uid://xwqu52m3ch68" path="res://Scripts/game_manager.gd" id="1_6iyac"]
 [ext_resource type="TileSet" uid="uid://b1a0nv6k5pn7y" path="res://Tiles/main_tileset.tres" id="1_21xkr"]
@@ -12,6 +12,10 @@
 [ext_resource type="PackedScene" uid="uid://rbx0f35blpl0" path="res://Scenes/health_potion.tscn" id="9_d1ilt"]
 [ext_resource type="PackedScene" uid="uid://ca5sm2e8k8tr6" path="res://Scenes/shoot_speed_potion.tscn" id="9_ynf5e"]
 [ext_resource type="PackedScene" uid="uid://dbyol757yf5y3" path="res://Scenes/move_speed_potion.tscn" id="10_hptm8"]
+[ext_resource type="AudioStream" uid="uid://c5a2o0208i8ux" path="res://Audio/PlayerAttack.wav" id="13_fdnlq"]
+[ext_resource type="AudioStream" uid="uid://0cimw14vsyf1" path="res://Audio/PlayerDamaged.wav" id="14_jkdf5"]
+[ext_resource type="AudioStream" uid="uid://csuaqxmquij6r" path="res://Audio/DrinkPotion.wav" id="15_wsu2k"]
+[ext_resource type="AudioStream" uid="uid://cy5akl2ivajjo" path="res://Audio/Music.wav" id="16_k12tt"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6bp64"]
 size = Vector2(95, 127)
@@ -61,7 +65,6 @@ editor_draw_limits = true
 script = ExtResource("3_8gbba")
 
 [node name="EnemySpawner" type="Node" parent="." node_paths=PackedStringArray("enemy_pools", "spawn_points")]
-process_mode = 0
 script = ExtResource("5_21xkr")
 enemy_pools = [NodePath("EnemyPool"), NodePath("BossPool")]
 enemy_spawn_weights = Array[int]([10, 1])
@@ -115,7 +118,6 @@ position = Vector2(-10, 304)
 shape = SubResource("RectangleShape2D_left")
 
 [node name="PotionSpawner" type="Node" parent="."]
-process_mode = 0
 script = ExtResource("8_344ge")
 potion_scenes = Array[PackedScene]([ExtResource("9_d1ilt"), ExtResource("9_ynf5e"), ExtResource("10_hptm8")])
 min_bounds = Vector2(-400, -400)
@@ -178,6 +180,20 @@ offset_bottom = 28.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Retry"
+
+[node name="ShootAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_fdnlq")
+
+[node name="DamagedAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_jkdf5")
+
+[node name="PotionAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("15_wsu2k")
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16_k12tt")
+volume_db = -8.0
+autoplay = true
 
 [connection signal="timeout" from="PotionSpawner/SpawnTimer" to="PotionSpawner" method="_on_spawn_timer_timeout"]
 [connection signal="pressed" from="CanvasLayer/EndScreen/RetryButton" to="." method="_on_retry_button_pressed"]

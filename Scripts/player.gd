@@ -15,6 +15,10 @@ var last_shoot_time : float = 0.0
 @onready var bullet_pool = $PlayerBulletPool
 @onready var health_bar : ProgressBar = $HealthBar
 
+@onready var shoot_audio : AudioStreamPlayer = $"../ShootAudio"
+@onready var damaged_audio : AudioStreamPlayer = $"../DamagedAudio"
+@onready var potion_audio : AudioStreamPlayer = $"../PotionAudio"
+
 var move_input : Vector2
 var additional_bullet_speed : float
 var game_over : bool = false
@@ -72,6 +76,8 @@ func _shoot():
 	bullet.move_dir = direction
 	bullet.additional_speed = additional_bullet_speed
 
+	shoot_audio.play()
+
 func take_damage(damage : int):
 	current_hp -= damage
 
@@ -81,6 +87,7 @@ func take_damage(damage : int):
 	else:
 		_damage_flash()
 		health_bar.value = current_hp
+		damaged_audio.play()
 		$"../Camera2D".damage_shake()
 
 func _damage_flash():
@@ -94,3 +101,6 @@ func heal(amount : int):
 		current_hp = max_hp
 	
 	health_bar.value = current_hp
+
+func drink_potion():
+	potion_audio.play()
