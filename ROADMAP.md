@@ -1,5 +1,23 @@
 # Bullet Hell Game - Development Roadmap
 
+## 📋 Project Status
+
+### 🎮 Course Completed - December 26, 2025
+**Foundation built in one day with 11 commits**
+
+This project represents the completion of my first Godot 2D game development course. The core systems are functional and the game is playable, but it's currently a learning prototype, not a commercial product.
+
+### ⏸️ Development Hiatus (December 2025 - Mid/Late 2027)
+**Expected return: 12-18 months from now (June 2027 - June 2028)**
+
+Taking a planned break to focus on other commitments. When I return, the roadmap below outlines the path from prototype to commercial Steam release. The foundation is solid—now it needs depth, polish, and commercial-quality content.
+
+**What's already done:** Core mechanics, enemy AI, object pooling, audio, game management  
+**What's needed:** Bullet hell mechanics, content depth, meta-progression, professional polish  
+**Estimated additional dev time:** 8-12 months of focused work
+
+---
+
 ## Current Status (Updated: December 26, 2025 - 23:43)
 
 ### ✅ Course Completed - Core Game Functional!
