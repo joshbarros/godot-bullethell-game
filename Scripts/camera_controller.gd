@@ -11,4 +11,6 @@ func _ready():
     global_position = target.global_position
 
 func _process(delta):
+    if not is_instance_valid(target):
+        return
     global_position = global_position.lerp(target.global_position, follow_rate * delta)

@@ -26,104 +26,109 @@ var player_dist : float
 var player_dir : Vector2
 
 func _ready():
-    health_bar.max_value = max_hp
-    health_bar.value = current_hp
-    visibility_changed.connect(_on_visibility_changed)
+	health_bar.max_value = max_hp
+	health_bar.value = current_hp
+	visibility_changed.connect(_on_visibility_changed)
 
 func _process(delta):
-    if not visible:
-        return
-    
-    player_dist = global_position.distance_to(player.global_position)
-    player_dir = global_position.direction_to(player.global_position)
+	if not visible:
+		return
+	
+	if not is_instance_valid(player):
+		return
+	
+	player_dist = global_position.distance_to(player.global_position)
+	player_dir = global_position.direction_to(player.global_position)
 
-    if flip_sprite:
-        sprite.flip_h = player_dir.x > 0
-    else:
-        sprite.flip_h = player_dir.x < 0
+	if flip_sprite:
+		sprite.flip_h = player_dir.x > 0
+	else:
+		sprite.flip_h = player_dir.x < 0
 
-    if player_dist < shoot_range:
-        if Time.get_unix_time_from_system() - last_shoot_time > shoot_rate:
-            _shoot()
-    
-    _move_wobble()
+	if player_dist < shoot_range:
+		if Time.get_unix_time_from_system() - last_shoot_time > shoot_rate:
+			_shoot()
+	
+	_move_wobble()
 
 func _physics_process(delta):
-    if not visible:
-        return
-    
-    var move_dir = player_dir
-    var forward_speed = player_dir.dot(velocity)
-    var local_avoidance = _local_avoidance()
+	if not player:
+		return
+	
+	var move_dir = player_dir
+	var local_avoidance = _local_avoidance()
 
-    if local_avoidance.length() > 0:
-        move_dir = local_avoidance
+	if local_avoidance.length() > 0:
+		move_dir = local_avoidance
 
-    if forward_speed < max_speed and player_dist > stop_range:
-        velocity += move_dir * acceleration
-    else:
-        velocity *= drag
-    
-    move_and_slide()
+	if velocity.length() < max_speed and player_dist > stop_range:
+		velocity += move_dir * acceleration
+	else:
+		velocity *= drag
+	
+	move_and_slide()
 
 func _local_avoidance() -> Vector2:
-    avoidance_ray.target_position = to_local(player.global_position).normalized()
-    avoidance_ray.target_position *= 80
+	if not is_instance_valid(player):
+		return Vector2.ZERO
+	
+	avoidance_ray.target_position = to_local(player.global_position).normalized()
+	avoidance_ray.target_position *= 80
 
-    if not avoidance_ray.is_colliding():
-        return Vector2.ZERO
-    
-    var obstacle = avoidance_ray.get_collider()
+	if not avoidance_ray.is_colliding():
+		return Vector2.ZERO
+	
+	var obstacle = avoidance_ray.get_collider()
 
-    if obstacle == player:
-        return Vector2.ZERO
-    
-    var obstacle_point = avoidance_ray.get_collision_point()
-    var obstacle_dir = global_position.direction_to(obstacle_point)
+	if obstacle == player:
+		return Vector2.ZERO
+	
+	var obstacle_point = avoidance_ray.get_collision_point()
+	var obstacle_dir = global_position.direction_to(obstacle_point)
 
-    return Vector2(-obstacle_dir.y, obstacle_dir.x)
+	return Vector2(-obstacle_dir.y, obstacle_dir.x)
 
 func _shoot():
-    last_shoot_time = Time.get_unix_time_from_system()
+	last_shoot_time = Time.get_unix_time_from_system()
 
-    var bullet = bullet_pool.spawn()
-    bullet.global_position = muzzle.global_position
+	var bullet = bullet_pool.spawn()
+	bullet.global_position = muzzle.global_position
 
-    bullet.move_dir = muzzle.global_position.direction_to(player.global_position)
+	bullet.move_dir = muzzle.global_position.direction_to(player.global_position)
 
 func _move_wobble():
-    if velocity.length() == 0:
-        sprite.rotation_degrees = 0
-        return
-    
-    var t = Time.get_unix_time_from_system()
-    var rot = sin(t * 20) * 2
-    
-    sprite.rotation_degrees = rot
+	if velocity.length() == 0:
+		sprite.rotation_degrees = 0
+		return
+	
+	var t = Time.get_unix_time_from_system()
+	var rot = sin(t * 20) * 2
+	
+	sprite.rotation_degrees = rot
 
 func take_damage(damage : int):
-    current_hp -= damage
+	current_hp -= damage
 
-    if current_hp <= 0:
-        visible = false
-    else:
-        _damage_flash()
-        health_bar.value = current_hp
+	if current_hp <= 0:
+		visible = false
+	else:
+		_damage_flash()
+		health_bar.value = current_hp
 
 func _damage_flash():
-    sprite.modulate = Color.BLACK
-    await get_tree().create_timer(0.1).timeout
-    sprite.modulate = Color.WHITE
+	sprite.modulate = Color.BLACK
+	await get_tree().create_timer(0.1).timeout
+	sprite.modulate = Color.WHITE
 
 func _on_visibility_changed():
-    if visible:
-        set_process(true)
-        set_physics_process(true)
+	if visible:
+		set_process(true)
+		set_physics_process(true)
 
-        current_hp = max_hp
-        health_bar.value = current_hp
-    else:
-        set_process(false)
-        set_physics_process(false)
+		current_hp = max_hp
+		health_bar.value = current_hp
+	else:
+		set_process(false)
+		set_physics_process(false)
 
-        global_position = Vector2(0, 999999)
+		global_position = Vector2(0, 999999)

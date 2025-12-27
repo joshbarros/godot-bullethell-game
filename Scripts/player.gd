@@ -17,6 +17,7 @@ var last_shoot_time : float = 0.0
 
 var move_input : Vector2
 var additional_bullet_speed : float
+var game_over : bool = false
 
 func _ready():
 	health_bar.max_value = max_hp
@@ -25,6 +26,9 @@ func _ready():
 var bullet_scene : PackedScene = preload("res://Scenes/bullet.tscn")
 
 func _physics_process(_delta):
+	if game_over:
+		return
+	
 	move_input = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 
 	if move_input.length() > 0:
@@ -35,6 +39,9 @@ func _physics_process(_delta):
 	move_and_slide()
 
 func _process(_delta):
+	if game_over:
+		return
+	
 	sprite.flip_h = get_global_mouse_position().x > global_position.x
 
 	if Input.is_action_pressed("shoot"):
@@ -69,7 +76,8 @@ func take_damage(damage : int):
 	current_hp -= damage
 
 	if current_hp <= 0:
-		print("Player Died")
+		game_over = true
+		get_tree().get_first_node_in_group("GameManager").set_game_over()
 	else:
 		_damage_flash()
 		health_bar.value = current_hp
